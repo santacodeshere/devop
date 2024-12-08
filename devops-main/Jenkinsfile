@@ -1,15 +1,55 @@
 pipeline {
     agent any
+
     stages {
-        stage('Build') {
+        stage('Checkout') {
             steps {
-                sh 'docker-compose build'
+                // Checkout the latest code from the repository
+                git url: 'https://github.com/santacodeshere/devop.git'
             }
         }
-        stage('Run') {
+        stage('Install Dependencies') {
             steps {
-                sh 'docker-compose up -d'
+                // Install project dependencies (assuming Node.js and npm)
+                script {
+                    sh 'npm install'
+                }
             }
+        }
+        stage('Run Tests') {
+            steps {
+                // Run tests if you have any defined
+                script {
+                    sh 'npm test'
+                }
+            }
+        }
+        stage('Build') {
+            steps {
+                // Build your project (if needed)
+                script {
+                    sh 'npm run build'
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                // Deploy the chatbot (you can customize this step as per your requirements)
+                script {
+                    sh 'npm run deploy'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            // Notify or perform any action on successful pipeline
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            // Notify or perform any action on failure
+            echo 'Pipeline failed!'
         }
     }
 }

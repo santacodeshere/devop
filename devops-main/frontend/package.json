@@ -1,0 +1,11 @@
+{
+    "name": "frontend",
+    "version": "1.0.0",
+    "description": "Chat app frontend",
+    "main": "index.html",
+    "scripts": {
+      "start": "live-server --port=3000 ."
+    },
+    "dependencies": {}
+  }
+  

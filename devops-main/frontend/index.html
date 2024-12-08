@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f4;
+        }
+        #app {
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+        }
+        #chat-header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        #chat-box {
+            height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #fafafa;
+            display: flex;
+            flex-direction: column;
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .message.sent {
+            align-self: flex-end;
+            background-color: #007bff;
+            color: #fff;
+        }
+        .message.received {
+            align-self: flex-start;
+            background-color: #e9ecef;
+            color: #000;
+        }
+        #chat-input-container {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #ddd;
+        }
+        #chat-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        #send-button, #upload-button, #change-bg-button {
+            margin-left: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #send-button:hover, #upload-button:hover, #change-bg-button:hover {
+            background-color: #0056b3;
+        }
+        #image-preview {
+            max-width: 100%;
+            margin-top: 10px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="chat-header">Chat App</div>
+        <div id="chat-box"></div>
+        <div id="chat-input-container">
+            <input type="text" id="chat-input" placeholder="Type a message...">
+            <button id="send-button">Send</button>
+            <button id="upload-button">Upload</button>
+            <button id="change-bg-button">Change BG</button>
+        </div>
+        <input type="file" id="file-input" style="display: none;" accept="image/*">
+    </div>
+
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        const chatInput = document.getElementById('chat-input');
+        const sendButton = document.getElementById('send-button');
+        const uploadButton = document.getElementById('upload-button');
+        const changeBgButton = document.getElementById('change-bg-button');
+        const fileInput = document.getElementById('file-input');
+
+        // Function to add a message to the chat
+        function addMessage(content, type = 'sent') {
+            const message = document.createElement('div');
+            message.classList.add('message', type);
+            message.textContent = content;
+            chatBox.appendChild(message);
+            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll to the bottom
+        }
+
+        // Handle send button click
+        sendButton.addEventListener('click', () => {
+            const message = chatInput.value.trim();
+            if (message) {
+                addMessage(message, 'sent');
+                chatInput.value = '';
+
+                // Simulate receiving a response from the backend
+                setTimeout(() => addMessage("Got it! 👋", 'received'), 1000);
+            }
+        });
+
+        // Handle file upload
+        uploadButton.addEventListener('click', () => {
+            fileInput.click(); // Trigger file input click
+        });
+
+        fileInput.addEventListener('change', (event) => {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.id = 'image-preview';
+                    chatBox.appendChild(img);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Handle background change
+        changeBgButton.addEventListener('click', () => {
+            const colors = ['#f4f4f4', '#e8f5e9', '#e3f2fd', '#fce4ec', '#fff3e0'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            document.body.style.backgroundColor = randomColor;
+        });
+    </script>
+</body>
+</html>

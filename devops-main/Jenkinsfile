@@ -1,15 +1,68 @@
 pipeline {
     agent any
+    
+    environment {
+        // Define any global environment variables here
+        CHATBOT_DIR = C:\Users\sanja\OneDrive\Desktop\devops\devops-main // adjust to the correct path if needed
+    }
+
     stages {
-        stage('Build') {
+        // Stage 1: Checkout the latest code from GitHub repository
+        stage('Checkout') {
             steps {
-                sh 'docker-compose build'
+                // Checkout the latest code from the GitHub repository
+                git url: 'https://github.com/santacodeshere/devop.git', branch: 'main' // replace with your repo URL and branch
             }
         }
-        stage('Run') {
+
+        // Stage 2: Install Dependencies (e.g., npm install for Node.js)
+        stage('Install Dependencies') {
             steps {
-                sh 'docker-compose up -d'
+                dir("${CHATBOT_DIR}") {
+                    // Install dependencies (assuming a Node.js-based chatbot)
+                    sh 'npm install'
+                }
             }
+        }
+
+        // Stage 3: Run Tests (if any are defined)
+        stage('Run Tests') {
+            steps {
+                dir("${CHATBOT_DIR}") {
+                    // Run tests (if you have them set up)
+                    sh 'npm test'
+                }
+            }
+        }
+
+        // Stage 4: Build the Chatbot (e.g., running a build process)
+        stage('Build') {
+            steps {
+                dir("${CHATBOT_DIR}") {
+                    // Build your chatbot (if needed, such as transpiling code or packaging)
+                    sh 'npm run build' // Modify based on your chatbot's build process
+                }
+            }
+        }
+
+        // Stage 5: Deploy the Chatbot (Optional - Deploy to production or test server)
+        stage('Deploy') {
+            steps {
+                dir("${CHATBOT_DIR}") {
+                    // Deploy the chatbot (this could be running a deploy script, e.g., Docker, AWS, etc.)
+                    sh 'npm run deploy' // Modify based on your deploy script
+                }
+            }
+        }
+    }
+
+    // Post actions after the pipeline runs
+    post {
+        success {
+            echo 'Pipeline executed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
         }
     }
 }

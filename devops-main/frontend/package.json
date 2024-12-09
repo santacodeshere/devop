@@ -4,8 +4,9 @@
     "description": "Chat app frontend",
     "main": "index.html",
     "scripts": {
-      "start": "live-server --port=3000 ."
+        "start": "live-server --port=3000 ."
     },
-    "dependencies": {}
-  }
-  
+    "devDependencies": {
+        "live-server": "^1.2.2"
+    }
+}
